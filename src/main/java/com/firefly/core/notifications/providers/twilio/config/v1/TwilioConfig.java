@@ -20,10 +20,14 @@ package com.firefly.core.notifications.providers.twilio.config.v1;
 import com.firefly.core.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
+@ConditionalOnProperty(prefix = "twilio.config", name = "account-sid")
 public class TwilioConfig {
 
     @Autowired
@@ -31,6 +35,8 @@ public class TwilioConfig {
 
     @PostConstruct
     public void initTwilio() {
+        log.info("Initializing Twilio SMS provider with account SID: {}", 
+                twilioProperties.getAccountSid());
         Twilio.init(
                 twilioProperties.getAccountSid(),
                 twilioProperties.getAuthToken()

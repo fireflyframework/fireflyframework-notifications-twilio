@@ -1,4 +1,4 @@
-# lib-notifications-twilio
+# fireflyframework-notifications-twilio
 
 Twilio SMS adapter for Firefly Notifications Library.
 
@@ -26,14 +26,14 @@ Add these dependencies to your `pom.xml`:
 
 ```xml path=null start=null
 <dependency>
-  <groupId>com.firefly</groupId>
-  <artifactId>lib-notifications-core</artifactId>
+  <groupId>org.fireflyframework</groupId>
+  <artifactId>fireflyframework-notifications-core</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 
 <dependency>
-  <groupId>com.firefly</groupId>
-  <artifactId>lib-notifications-twilio</artifactId>
+  <groupId>org.fireflyframework</groupId>
+  <artifactId>fireflyframework-notifications-twilio</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -114,7 +114,7 @@ To switch from Twilio to another SMS provider:
 ## Implementation Details
 
 This adapter:
-- Implements `SMSProvider` interface from `lib-notifications-core`
+- Implements `SMSProvider` interface from `fireflyframework-notifications-core`
 - Uses Twilio Java SDK for API calls
 - Transforms `SMSRequestDTO` to Twilio's `Message` format
 - Handles authentication via Account SID and Auth Token
@@ -140,4 +140,4 @@ This adapter:
 ## References
 
 - [Twilio SMS API Documentation](https://www.twilio.com/docs/sms/api)
-- [Firefly Notifications Architecture](../lib-notifications/ARCHITECTURE.md)
+- [Firefly Notifications Architecture](../fireflyframework-notifications/ARCHITECTURE.md)

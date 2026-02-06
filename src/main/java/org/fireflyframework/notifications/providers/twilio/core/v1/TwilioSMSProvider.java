@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Solutions Inc
+ * Copyright 2024-2026 Firefly Software Solutions Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 
 
-package com.firefly.core.notifications.providers.twilio.core.v1;
+package org.fireflyframework.notifications.providers.twilio.core.v1;
 
-import com.firefly.core.notifications.interfaces.dtos.sms.v1.SMSRequestDTO;
-import com.firefly.core.notifications.interfaces.dtos.sms.v1.SMSResponseDTO;
-import com.firefly.core.notifications.interfaces.interfaces.providers.sms.v1.SMSProvider;
-import com.firefly.core.notifications.providers.twilio.properties.v1.TwilioProperties;
+import org.fireflyframework.notifications.interfaces.dtos.sms.v1.SMSRequestDTO;
+import org.fireflyframework.notifications.interfaces.dtos.sms.v1.SMSResponseDTO;
+import org.fireflyframework.notifications.interfaces.interfaces.providers.sms.v1.SMSProvider;
+import org.fireflyframework.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;

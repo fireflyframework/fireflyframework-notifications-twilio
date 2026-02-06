@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Firefly Software Solutions Inc
+ * Copyright 2024-2026 Firefly Software Solutions Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 
 
-package com.firefly.core.notifications.providers.twilio.config.v1;
+package org.fireflyframework.notifications.providers.twilio.config.v1;
 
-import com.firefly.core.notifications.providers.twilio.properties.v1.TwilioProperties;
+import org.fireflyframework.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

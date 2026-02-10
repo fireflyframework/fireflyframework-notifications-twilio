@@ -1,5 +1,7 @@
 # fireflyframework-notifications-twilio
 
+[![CI](https://github.com/fireflyframework/fireflyframework-notifications-twilio/actions/workflows/ci.yml/badge.svg)](https://github.com/fireflyframework/fireflyframework-notifications-twilio/actions/workflows/ci.yml)
+
 Twilio SMS adapter for Firefly Notifications Library.
 
 ## Overview

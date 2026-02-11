@@ -1,145 +1,92 @@
-# fireflyframework-notifications-twilio
+# Firefly Framework - Notifications - Twilio
 
 [![CI](https://github.com/fireflyframework/fireflyframework-notifications-twilio/actions/workflows/ci.yml/badge.svg)](https://github.com/fireflyframework/fireflyframework-notifications-twilio/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-21%2B-orange.svg)](https://openjdk.org)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)
 
-Twilio SMS adapter for Firefly Notifications Library.
+> Twilio SMS adapter for Firefly Notifications.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Overview
 
-This module is an **infrastructure adapter** in the hexagonal architecture that implements the `SMSProvider` port interface. It handles all Twilio-specific integration details, including API authentication, request formatting, and SMS delivery.
+Firefly Framework Notifications Twilio implements the `SMSProvider` interface from the Firefly Notifications core module using Twilio as the delivery provider. It provides `TwilioSMSProvider` which handles SMS delivery through the Twilio API.
 
-### Architecture Role
+The module includes auto-configuration for seamless activation when included on the classpath alongside the notifications core module. Configuration properties allow customizing API credentials and provider-specific settings.
 
-```
-Application Layer (SMSService)
-    ↓ depends on
-Domain Layer (SMSProvider interface)
-    ↑ implemented by
-Infrastructure Layer (TwilioSMSProvider) ← THIS MODULE
-    ↓ calls
-Twilio REST API
-```
+## Features
 
-This adapter can be replaced with other SMS providers (AWS SNS, Vonage) without changing your application code.
+- `SMSProvider` implementation using Twilio
+- Spring Boot auto-configuration for seamless activation
+- Configurable API credentials via application properties
+- Standalone provider library (include alongside fireflyframework-notifications)
+
+## Requirements
+
+- Java 21+
+- Spring Boot 3.x
+- Maven 3.9+
+- Twilio account and API credentials
 
 ## Installation
 
-Add these dependencies to your `pom.xml`:
-
-```xml path=null start=null
+```xml
 <dependency>
-  <groupId>org.fireflyframework</groupId>
-  <artifactId>fireflyframework-notifications-core</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+    <groupId>org.fireflyframework</groupId>
+    <artifactId>fireflyframework-notifications-twilio</artifactId>
+    <version>26.01.01</version>
 </dependency>
+```
 
-<dependency>
-  <groupId>org.fireflyframework</groupId>
-  <artifactId>fireflyframework-notifications-twilio</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-</dependency>
+## Quick Start
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.fireflyframework</groupId>
+        <artifactId>fireflyframework-notifications</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.fireflyframework</groupId>
+        <artifactId>fireflyframework-notifications-twilio</artifactId>
+    </dependency>
+</dependencies>
 ```
 
 ## Configuration
 
-Add the following to your `application.yml`:
-
-```yaml path=null start=null
-notifications:
-  sms:
-    provider: twilio  # Enables this adapter
-
-twilio:
-  config:
-    account-sid: ${TWILIO_ACCOUNT_SID}
-    auth-token: ${TWILIO_AUTH_TOKEN}
-    phone-number: "+1234567890"  # Your Twilio phone number
+```yaml
+firefly:
+  notifications:
+    twilio:
+      account-sid: ACxxxxxxxxxx
+      auth-token: your-auth-token
+      from-number: +1234567890
 ```
 
-### Getting Your Credentials
+## Documentation
 
-1. Sign up at [twilio.com](https://www.twilio.com)
-2. Get your Account SID and Auth Token from the console dashboard
-3. Purchase or verify a phone number
-4. Set as environment variables:
-   ```bash
-   export TWILIO_ACCOUNT_SID="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-   export TWILIO_AUTH_TOKEN="your-auth-token"
-   ```
+No additional documentation available for this project.
 
-## Usage
+## Contributing
 
-Inject `SMSService` from the core library. Spring automatically wires this adapter:
+Contributions are welcome. Please read the [CONTRIBUTING.md](CONTRIBUTING.md) guide for details on our code of conduct, development process, and how to submit pull requests.
 
-```java path=null start=null
-@Service
-public class VerificationService {
-    
-    @Autowired
-    private SMSService smsService;
-    
-    public void sendVerificationCode(String phoneNumber, String code) {
-        SMSRequestDTO request = SMSRequestDTO.builder()
-            .phoneNumber(phoneNumber)
-            .message("Your verification code is: " + code)
-            .build();
-        
-        smsService.sendSMS(request)
-            .subscribe(response -> {
-                if (response.isSuccess()) {
-                    log.info("SMS sent: {}", response.getMessageId());
-                } else {
-                    log.error("Failed: {}", response.getError());
-                }
-            });
-    }
-}
-```
+## License
 
-## Features
+Copyright 2024-2026 Firefly Software Solutions Inc.
 
-- **International SMS** - Supports sending to any country Twilio serves
-- **Synchronous API** - Returns response immediately
-- **Error handling** - Validates phone numbers and handles API errors
-- **Delivery tracking** - Returns Twilio message SID for status tracking
-
-## Switching Providers
-
-To switch from Twilio to another SMS provider:
-
-1. Remove this dependency from `pom.xml`
-2. Add alternative SMS adapter dependency
-3. Update configuration to use different provider
-
-**No code changes required** in your services—hexagonal architecture ensures provider independence!
-
-## Implementation Details
-
-This adapter:
-- Implements `SMSProvider` interface from `fireflyframework-notifications-core`
-- Uses Twilio Java SDK for API calls
-- Transforms `SMSRequestDTO` to Twilio's `Message` format
-- Handles authentication via Account SID and Auth Token
-- Returns standardized `SMSResponseDTO`
-
-## Troubleshooting
-
-### Error: "No qualifying bean of type 'SMSProvider'"
-
-- Ensure `notifications.sms.provider=twilio` is set
-- Verify Twilio credentials are configured
-
-### Error: "Invalid phone number"
-
-- Phone numbers must be in E.164 format (e.g., +1234567890)
-- Ensure the number includes country code
-
-### Error: "Insufficient balance"
-
-- Check your Twilio account balance
-- Add funds or use trial credits for testing
-
-## References
-
-- [Twilio SMS API Documentation](https://www.twilio.com/docs/sms/api)
-- [Firefly Notifications Architecture](../fireflyframework-notifications/ARCHITECTURE.md)
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.

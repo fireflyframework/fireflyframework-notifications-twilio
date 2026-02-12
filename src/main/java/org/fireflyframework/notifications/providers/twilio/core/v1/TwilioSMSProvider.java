@@ -23,37 +23,41 @@ import org.fireflyframework.notifications.interfaces.interfaces.providers.sms.v1
 import org.fireflyframework.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-@Service
 public class TwilioSMSProvider implements SMSProvider {
 
-    @Autowired
-    private TwilioProperties twilioProperties;
+    private final TwilioProperties twilioProperties;
+
+    public TwilioSMSProvider(TwilioProperties twilioProperties) {
+        this.twilioProperties = twilioProperties;
+    }
 
     @Override
-    public SMSResponseDTO sendSMS(SMSRequestDTO request) {
+    public Mono<SMSResponseDTO> sendSMS(SMSRequestDTO request) {
         if (request == null) {
-            return SMSResponseDTO.error("Request cannot be null");
+            return Mono.just(SMSResponseDTO.error("Request cannot be null"));
         }
         if (!StringUtils.hasText(request.getPhoneNumber())) {
-            return SMSResponseDTO.error("Phone number cannot be empty");
+            return Mono.just(SMSResponseDTO.error("Phone number cannot be empty"));
         }
         if (!StringUtils.hasText(request.getMessage())) {
-            return SMSResponseDTO.error("Message cannot be empty");
+            return Mono.just(SMSResponseDTO.error("Message cannot be empty"));
         }
         if (!StringUtils.hasText(twilioProperties.getPhoneNumber())) {
-            return SMSResponseDTO.error("Sender phone number not configured");
+            return Mono.just(SMSResponseDTO.error("Sender phone number not configured"));
         }
 
-        Message message = Message.creator(
-                new PhoneNumber(request.getPhoneNumber().trim()),
-                new PhoneNumber(twilioProperties.getPhoneNumber().trim()),
-                request.getMessage().trim()
-        ).create();
+        return Mono.fromCallable(() -> {
+            Message message = Message.creator(
+                    new PhoneNumber(request.getPhoneNumber().trim()),
+                    new PhoneNumber(twilioProperties.getPhoneNumber().trim()),
+                    request.getMessage().trim()
+            ).create();
 
-        return SMSResponseDTO.success(message.getSid());
+            return SMSResponseDTO.success(message.getSid());
+        }).subscribeOn(Schedulers.boundedElastic());
     }
 }

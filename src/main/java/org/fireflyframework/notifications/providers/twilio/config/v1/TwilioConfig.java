@@ -17,29 +17,39 @@
 
 package org.fireflyframework.notifications.providers.twilio.config.v1;
 
+import org.fireflyframework.notifications.interfaces.interfaces.providers.sms.v1.SMSProvider;
+import org.fireflyframework.notifications.providers.twilio.core.v1.TwilioSMSProvider;
 import org.fireflyframework.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.Twilio;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 
 @Slf4j
-@Configuration
-@ConditionalOnProperty(prefix = "twilio.config", name = "account-sid")
+@AutoConfiguration
+@ConditionalOnProperty(name = "firefly.notifications.sms.provider", havingValue = "twilio")
+@ConditionalOnClass(com.twilio.Twilio.class)
+@EnableConfigurationProperties(TwilioProperties.class)
 public class TwilioConfig {
 
-    @Autowired
-    private TwilioProperties twilioProperties;
-
-    @PostConstruct
-    public void initTwilio() {
-        log.info("Initializing Twilio SMS provider with account SID: {}", 
+    @Bean
+    public com.twilio.Twilio twilioInit(TwilioProperties twilioProperties) {
+        log.info("Initializing Twilio SMS provider with account SID: {}",
                 twilioProperties.getAccountSid());
         Twilio.init(
                 twilioProperties.getAccountSid(),
                 twilioProperties.getAuthToken()
         );
+        return null;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SMSProvider twilioSMSProvider(TwilioProperties twilioProperties) {
+        return new TwilioSMSProvider(twilioProperties);
     }
 }

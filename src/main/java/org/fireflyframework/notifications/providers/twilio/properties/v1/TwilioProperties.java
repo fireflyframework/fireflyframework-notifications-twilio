@@ -19,11 +19,9 @@ package org.fireflyframework.notifications.providers.twilio.properties.v1;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @Data
-@Configuration
-@ConfigurationProperties(prefix = "twilio.config")
+@ConfigurationProperties(prefix = "firefly.notifications.twilio")
 public class TwilioProperties {
     private String accountSid;
     private String authToken;

@@ -19,8 +19,10 @@ package org.fireflyframework.notifications.providers.twilio.properties.v1;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 @Data
+@Validated
 @ConfigurationProperties(prefix = "firefly.notifications.twilio")
 public class TwilioProperties {
     private String accountSid;

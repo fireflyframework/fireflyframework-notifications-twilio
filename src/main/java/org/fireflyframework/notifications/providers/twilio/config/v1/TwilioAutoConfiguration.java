@@ -17,7 +17,7 @@
 
 package org.fireflyframework.notifications.providers.twilio.config.v1;
 
-import org.fireflyframework.notifications.interfaces.interfaces.providers.sms.v1.SMSProvider;
+import org.fireflyframework.notifications.interfaces.providers.sms.v1.SMSProvider;
 import org.fireflyframework.notifications.providers.twilio.core.v1.TwilioSMSProvider;
 import org.fireflyframework.notifications.providers.twilio.properties.v1.TwilioProperties;
 import com.twilio.Twilio;
@@ -34,8 +34,9 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnProperty(name = "firefly.notifications.sms.provider", havingValue = "twilio")
 @ConditionalOnClass(com.twilio.Twilio.class)
 @EnableConfigurationProperties(TwilioProperties.class)
-public class TwilioConfig {
+public class TwilioAutoConfiguration {
 
+    @ConditionalOnMissingBean
     @Bean
     public com.twilio.Twilio twilioInit(TwilioProperties twilioProperties) {
         log.info("Initializing Twilio SMS provider with account SID: {}",
